@@ -1,12 +1,12 @@
-use crate::AsyncWrite;
+use crate::{AsyncWrite, AsyncWriteExt};
 use std::future::Future;
 use std::io;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-/// A future to write some of the buffer to an `AsyncWrite`.
 #[derive(Debug)]
 #[must_use = "futures do nothing unless you `.await` or poll them"]
+/// Concrete Future type returned from [`AsyncWriteExt::write`].
 pub struct Write<'a, W: ?Sized> {
     writer: &'a mut W,
     buf: &'a [u8],

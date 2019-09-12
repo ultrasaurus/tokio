@@ -1,4 +1,4 @@
-use crate::{AsyncRead, AsyncWrite};
+use crate::{AsyncRead, AsyncReadExt, AsyncWrite};
 use futures_core::ready;
 use std::future::Future;
 use std::io;
@@ -7,6 +7,7 @@ use std::task::{Context, Poll};
 
 #[derive(Debug)]
 #[must_use = "futures do nothing unless you `.await` or poll them"]
+/// Concrete Future type returned from [`AsyncReadExt::copy`].
 pub struct Copy<'a, R: ?Sized, W: ?Sized> {
     reader: &'a mut R,
     read_done: bool,

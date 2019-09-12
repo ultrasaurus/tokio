@@ -1,4 +1,4 @@
-use crate::AsyncWrite;
+use crate::{AsyncWrite, AsyncWriteExt};
 use futures_core::ready;
 use std::future::Future;
 use std::io;
@@ -8,6 +8,7 @@ use std::task::{Context, Poll};
 
 #[derive(Debug)]
 #[must_use = "futures do nothing unless you `.await` or poll them"]
+/// Concrete Future type returned from [`AsyncWriteExt::write_all`].
 pub struct WriteAll<'a, W: ?Sized> {
     writer: &'a mut W,
     buf: &'a [u8],

@@ -23,6 +23,34 @@ mod async_write;
 mod io;
 
 #[cfg(feature = "util")]
+/// Concrete future types returned from the `Async*Ext` traits.
+///
+/// These may come in handy if you need to be able to name specific tokio types to avoid dynamic
+/// dispatch until [`impl Trait` in type aliases](https://github.com/rust-lang/rust/issues/63063)
+/// stabilizes.
+pub mod futures {
+    use super::{AsyncBufReadExt, AsyncReadExt, AsyncWriteExt};
+
+    /// Futures related to [`AsyncReadExt`].
+    pub mod read {
+        pub use crate::io::{
+            chain::Chain, copy::Copy, read::Read, read_exact::ReadExact, read_to_end::ReadToEnd,
+            read_to_string::ReadToString, take::Take,
+        };
+    }
+
+    /// Futures related to [`AsyncBufReadExt`].
+    pub mod buf_read {
+        pub use crate::io::{lines::Lines, read_line::ReadLine, read_until::ReadUntil};
+    }
+
+    /// Futures related to [`AsyncWriteExt`].
+    pub mod write {
+        pub use crate::io::{flush::Flush, shutdown::Shutdown, write::Write, write_all::WriteAll};
+    }
+}
+
+#[cfg(feature = "util")]
 pub mod split;
 
 pub use self::async_buf_read::AsyncBufRead;

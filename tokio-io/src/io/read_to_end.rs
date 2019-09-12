@@ -1,4 +1,4 @@
-use crate::AsyncRead;
+use crate::{AsyncRead, AsyncReadExt};
 use futures_core::ready;
 use std::future::Future;
 use std::io;
@@ -7,6 +7,7 @@ use std::task::{Context, Poll};
 
 #[derive(Debug)]
 #[must_use = "futures do nothing unless you `.await` or poll them"]
+/// Concrete Future type returned from [`AsyncReadExt::read_to_end`].
 pub struct ReadToEnd<'a, R: ?Sized> {
     reader: &'a mut R,
     buf: &'a mut Vec<u8>,

@@ -1,4 +1,4 @@
-use crate::AsyncBufRead;
+use crate::{AsyncBufRead, AsyncBufReadExt};
 use futures_core::ready;
 use std::future::Future;
 use std::io;
@@ -6,9 +6,9 @@ use std::mem;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-/// Future for the [`read_until`](crate::io::AsyncBufReadExt::read_until) method.
 #[derive(Debug)]
 #[must_use = "futures do nothing unless you `.await` or poll them"]
+/// Concrete Future type returned from [`AsyncBufReadExt::read_until`].
 pub struct ReadUntil<'a, R: ?Sized + Unpin> {
     reader: &'a mut R,
     byte: u8,

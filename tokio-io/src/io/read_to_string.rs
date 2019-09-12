@@ -1,14 +1,14 @@
 use super::read_to_end::read_to_end_internal;
-use crate::AsyncRead;
+use crate::{AsyncRead, AsyncReadExt};
 use futures_core::ready;
 use std::future::Future;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 use std::{io, mem, str};
 
-/// Future for the [`read_to_string`](super::AsyncReadExt::read_to_string) method.
 #[derive(Debug)]
 #[must_use = "futures do nothing unless you `.await` or poll them"]
+/// Concrete Future type returned from [`AsyncReadExt::read_to_string`].
 pub struct ReadToString<'a, R: ?Sized + Unpin> {
     reader: &'a mut R,
     buf: &'a mut String,

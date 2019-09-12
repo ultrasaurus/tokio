@@ -1,5 +1,5 @@
 use super::read_until::read_until_internal;
-use crate::AsyncBufRead;
+use crate::{AsyncBufRead, AsyncBufReadExt};
 use futures_core::ready;
 use std::future::Future;
 use std::io;
@@ -8,9 +8,9 @@ use std::pin::Pin;
 use std::str;
 use std::task::{Context, Poll};
 
-/// Future for the [`read_line`](crate::io::AsyncBufReadExt::read_line) method.
 #[derive(Debug)]
 #[must_use = "futures do nothing unless you `.await` or poll them"]
+/// Concrete Future type returned from [`AsyncBufReadExt::read_line`].
 pub struct ReadLine<'a, R: ?Sized + Unpin> {
     reader: &'a mut R,
     buf: &'a mut String,

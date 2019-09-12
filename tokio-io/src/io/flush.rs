@@ -1,12 +1,10 @@
-use crate::AsyncWrite;
+use crate::{AsyncWrite, AsyncWriteExt};
 use std::future::Future;
 use std::io;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-/// A future used to fully flush an I/O object.
-///
-/// Created by the [`AsyncWriteExt::flush`] function.
+/// Concrete Future type returned from [`AsyncWriteExt::flush`].
 #[derive(Debug)]
 pub struct Flush<'a, A: ?Sized> {
     a: &'a mut A,

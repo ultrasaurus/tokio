@@ -1,5 +1,5 @@
 use super::read_line::read_line_internal;
-use crate::AsyncBufRead;
+use crate::{AsyncBufRead, AsyncBufReadExt};
 
 use futures_core::{ready, Stream};
 use std::io;
@@ -7,9 +7,9 @@ use std::mem;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-/// Stream for the [`lines`](crate::io::AsyncBufReadExt::lines) method.
 #[derive(Debug)]
 #[must_use = "streams do nothing unless polled"]
+/// Concrete Future type returned from [`AsyncBufReadExt::lines`].
 pub struct Lines<R> {
     reader: R,
     buf: String,

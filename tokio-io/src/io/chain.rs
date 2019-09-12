@@ -1,4 +1,4 @@
-use crate::{AsyncBufRead, AsyncRead};
+use crate::{AsyncBufRead, AsyncRead, AsyncReadExt};
 use futures_core::ready;
 use pin_utils::{unsafe_pinned, unsafe_unpinned};
 use std::fmt;
@@ -6,8 +6,8 @@ use std::io;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-/// Stream for the [`chain`](super::AsyncReadExt::chain) method.
 #[must_use = "streams do nothing unless polled"]
+/// Concrete Future type returned from [`AsyncReadExt::chain`].
 pub struct Chain<T, U> {
     first: T,
     second: U,

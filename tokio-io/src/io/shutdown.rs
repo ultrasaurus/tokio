@@ -1,12 +1,10 @@
-use crate::AsyncWrite;
+use crate::{AsyncWrite, AsyncWriteExt};
 use std::future::Future;
 use std::io;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-/// A future used to shutdown an I/O object.
-///
-/// Created by the [`AsyncWriteExt::shutdown`] function.
+/// Concrete Future type returned from [`AsyncWriteExt::shutdown`].
 #[derive(Debug)]
 pub struct Shutdown<'a, A: ?Sized> {
     a: &'a mut A,

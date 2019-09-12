@@ -1,4 +1,4 @@
-use crate::AsyncRead;
+use crate::{AsyncRead, AsyncReadExt};
 use std::future::Future;
 use std::io;
 use std::marker::Unpin;
@@ -10,6 +10,8 @@ use std::task::{Context, Poll};
 ///
 /// The returned future will resolve to both the I/O stream and the buffer
 /// as well as the number of bytes read once the read operation is completed.
+///
+/// This is the concrete Future type returned from [`AsyncReadExt::ready`].
 pub(crate) fn read<'a, R>(reader: &'a mut R, buf: &'a mut [u8]) -> Read<'a, R>
 where
     R: AsyncRead + Unpin + ?Sized,

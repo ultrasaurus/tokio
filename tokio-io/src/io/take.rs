@@ -1,13 +1,13 @@
-use crate::{AsyncBufRead, AsyncRead};
+use crate::{AsyncBufRead, AsyncRead, AsyncReadExt};
 use futures_core::ready;
 use pin_utils::{unsafe_pinned, unsafe_unpinned};
 use std::pin::Pin;
 use std::task::{Context, Poll};
 use std::{cmp, io};
 
-/// Stream for the [`take`](super::AsyncReadExt::take) method.
 #[derive(Debug)]
 #[must_use = "streams do nothing unless you `.await` or poll them"]
+/// Concrete Future type returned from [`AsyncReadExt::take`].
 pub struct Take<R> {
     inner: R,
     // Add '_' to avoid conflicts with `limit` method.
