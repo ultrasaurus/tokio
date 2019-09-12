@@ -8,9 +8,9 @@ use std::io;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-/// Stream of listeners
 #[derive(Debug)]
 #[must_use = "streams do nothing unless polled"]
+/// Concrete Stream type returned from [`UnixListener::incoming`].
 pub struct Incoming {
     inner: UnixListener,
 }

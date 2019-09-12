@@ -7,8 +7,7 @@ use std::io;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-/// Stream returned by the `TcpListener::incoming` function representing the
-/// stream of sockets received from a listener.
+/// Concrete Stream type returned from [`TcpListener::incoming`].
 #[must_use = "streams do nothing unless polled"]
 #[derive(Debug)]
 pub struct Incoming {

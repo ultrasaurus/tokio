@@ -11,8 +11,16 @@ mod stream;
 mod ucred;
 
 pub use self::datagram::UnixDatagram;
-#[cfg(feature = "async-traits")]
-pub use self::incoming::Incoming;
 pub use self::listener::UnixListener;
 pub use self::stream::UnixStream;
 pub use self::ucred::UCred;
+
+/// Concrete future types returned from the uds types.
+///
+/// These may come in handy if you need to be able to name specific tokio types to avoid dynamic
+/// dispatch until [`impl Trait` in type aliases](https://github.com/rust-lang/rust/issues/63063)
+/// stabilizes.
+pub mod futures {
+    #[cfg(feature = "async-traits")]
+    pub use super::incoming::Incoming;
+}
