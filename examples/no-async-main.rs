@@ -4,13 +4,17 @@
 //! To run the example:
 //!
 //!     cargo run --example no-async-main
+use core::future::Future;
+use std::sync::{Arc, Mutex};
 use tokio::runtime::{Handle, Runtime};
 use tokio::sync::{mpsc, oneshot};
-use Command::Increment;
+use tokio::task::JoinHandle;
+use Command::*;
 
 #[derive(Debug)]
 enum Command {
     Increment,
+    Shutdown,
     // Other commands can be added here
 }
 
@@ -19,8 +23,13 @@ enum Response {
     IncrementCompleted(u64),
 }
 
-struct Commander {
+struct RuntimeContext {
     runtime: Runtime,
+    cmd_handler: Option<JoinHandle<()>>,
+    tasks: Vec<i32>,
+}
+struct Commander {
+    context: Arc<Mutex<RuntimeContext>>,
 }
 
 #[derive(Clone)]
@@ -31,17 +40,27 @@ struct Sender {
 
 impl Commander {
     pub fn new() -> Commander {
+        let runtime = Runtime::new().expect("new tokio Runtime");
         Commander {
-            runtime: Runtime::new().unwrap(),
+            context: Arc::new(Mutex::new(RuntimeContext {
+                runtime,
+                cmd_handler: None,
+                tasks: Vec::new(),
+            })),
         }
     }
     pub fn connect(&self, ready_callback: impl Fn(Sender) -> () + Send + 'static) {
+        let mut context = self.context.lock().unwrap();
+
         let (cmd_tx, mut cmd_rx) = mpsc::channel::<(Command, oneshot::Sender<Response>)>(100);
         // Spawn a task to manage the counter
-        self.runtime.spawn(async move {
+        let handle = context.runtime.spawn(async move {
             let mut counter: u64 = 0;
             while let Some((cmd, response)) = cmd_rx.recv().await {
                 match cmd {
+                    Shutdown => {
+                        break;
+                    }
                     Increment => {
                         counter += 1;
                         response
@@ -50,8 +69,10 @@ impl Commander {
                     }
                 }
             }
+            println!("completed async task, originally spawned in connect");
         });
-        ready_callback(Sender::new(cmd_tx, self.runtime.handle().clone()));
+        context.cmd_handler = Some(handle);
+        ready_callback(Sender::new(cmd_tx, context.runtime.handle().clone()));
     }
 }
 
